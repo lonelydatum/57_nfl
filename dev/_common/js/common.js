@@ -19,7 +19,7 @@ const {w, h} = bannerSize
 function fader(el, time){
 	const tl = new TimelineMax()
 	tl.from(el, {duration:.3, opacity:0}, "+=.2")
-	tl.to(el, {duration:.3, opacity:0}, `+=${time}`)
+	tl.to(el, {duration:.2, opacity:0}, `+=${time}`)
 	return tl
 }
 
@@ -63,11 +63,17 @@ function standard(frame1=sliderSlant){
 	tl.to([ ".bg", ".t1"], {duration:.2, opacity:0}, `+=${read.frame1}`)
 
 	
+	if(universalBanner.size==="320x50"){
+		tl.add(fader(".frame2a", read.frame3), "+=.1")
+		tl.add(fader(".frame2b", 1.2), "+=.1")
+	}else{
+		tl.from(".frame2a", {duration:.3, opacity:0}, "+=.1")
+		tl.from(".frame2b", {duration:.3, opacity:0}, "+=.3")
+		tl.to(".frame2", {duration:.2, opacity:0}, `+=${read.frame2}`)
+	}
+	
 
-	tl.from(".frame2a", {duration:.2, opacity:0}, "+=.2")
-	tl.from(".frame2b", {duration:.2, opacity:0}, "+=.5")
-
-	tl.to(".frame2", {duration:.2, opacity:0}, `+=${read.frame2}`)
+	
 
 	tl.add(fader(".frame3", read.frame3), "+=.3")
 	
