@@ -47,7 +47,7 @@ function sliderSlant() {
 	var tl = new TimelineMax();
 	tl.add("t1");
 	tl.from(".t1a", { duration: .20, x: "-=100", y: "+=30", opacity: 0, ease: Power4.easeOut }, "t1");
-	tl.from(".t1b", { duration: .20, x: "+=100", y: "-=30", opacity: 0, ease: Power4.easeOut }, "t1+=.3");
+	tl.from(".t1b", { duration: .20, x: "+=100", y: "-=30", opacity: 0, ease: Power4.easeOut }, "t1+=.39");
 	return tl;
 }
 
@@ -78,7 +78,7 @@ function standard() {
 	tl.add(fader(".frame3", read.frame3), "+=.3");
 
 	tl.from([".frame4", ".footer"], { duration: .2, opacity: 0 }, "+=.3");
-	tl.from(".cta", { duration: .2, opacity: 0 }, "+=.5");
+	tl.from(".cta", { duration: .2, opacity: 0 }, "+=.8");
 
 	tl.add((0, _proline.olg)());
 
