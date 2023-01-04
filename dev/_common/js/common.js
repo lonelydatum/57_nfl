@@ -8,25 +8,13 @@ gsap.defaults({
 });
 
 const read = {
-	percentGoBack: 2.5,
-	betOnNFL: 2.2, 
-	njasb: 2,
-	losingBy: 2.5
+	frame1: 2.6,
+	frame2: 3, 
+	frame3: 3	
 }
 
 const {w, h} = bannerSize
 
-function logoFader(){
-	const tl = new TimelineMax()
-	tl.to(".logo1", {duration:.2, opacity:0}, "+=.5")
-	return tl
-}
-
-function bgFadeOut(read){
-	const tl = new TimelineMax()
-	tl.to([ ".bg", ".t1"], {duration:.2, opacity:0}, `+=${read}`)
-	return tl
-}
 
 function fader(el, time){
 	const tl = new TimelineMax()
@@ -35,17 +23,6 @@ function fader(el, time){
 	return tl
 }
 
-function ender(){
-	const tl = new TimelineMax()
-	tl.from(".t3", {duration:.3, opacity:0}, "+=.1")
-	tl.from(".logo3", {duration:.3, opacity:0}, "+=.5")
-	
-	tl.from([".footer", ".cta"], {duration:.3, opacity:0}, "+=.5")
-	tl.add(olg())
-	return tl	
-}
-
-
 function init(){	
 	const tl = new TimelineMax({onComplete:()=>{
 		if(document.getElementById("legalBtn")){			
@@ -53,40 +30,55 @@ function init(){
 		}
 	}})
 	tl.set(".frame1", {opacity:1})
-	if(window.universalBanner.name==="soccer"){
-		
-		document.getElementById("legalContent").innerHTML = "Individuals must be 19 years of age or older, a resident of Ontario, and located in the province to participate in online PROLINE+ sports betting. Terms and Conditions Apply."
-
-	}
-	return tl
-}
-
-
-
-
-function slider(read=1.7){	
-	const tl = new TimelineMax()
-	tl.add(logoFader())
-
-	tl.add("t1")
-	tl.from(".t1a", {duration:.20, x:"-=100", y:"+=30", opacity:0}, "t1")
-	tl.from(".t1b", {duration:.20, x:"+=100", y:"-=30", opacity:0}, "t1+=.6")
 	
-	tl.add(bgFadeOut(read))
 	return tl
 }
 
-function standard(){	
-	const tl = init()	
-	tl.add(slider(), "+=.5")
-	tl.from(".t2", {duration:.3, opacity:0}, "+=.1")
-	tl.from(".logo2", {duration:.3, opacity:0}, "+=.5")	
-	tl.to(".text2", {duration:.2, opacity:0}, `+=${read.njasb}`)
 
-	if(document.querySelector(".t2b")){
-		tl.add(fader(".t2b", read.betOnNFL))	
-	}
-	tl.add(ender())
+function sliderSlant(){
+	const tl = new TimelineMax()
+	tl.add("t1")
+	tl.from(".t1a", {duration:.20, x:"-=100", y:"+=30", opacity:0, ease:Power4.easeOut}, "t1")
+	tl.from(".t1b", {duration:.20, x:"+=100", y:"-=30", opacity:0, ease:Power4.easeOut}, "t1+=.3")
+	return tl
+}
+
+
+function sliderVertical(){
+	const tl = new TimelineMax()
+	tl.add("t1")
+	tl.from(".t1a", {duration:.20,  y:"-=30", opacity:0}, "t1")
+	tl.from(".t1b", {duration:.20,  y:"+=30", opacity:0}, "t1+=.2")
+	return tl
+}
+
+function standard(frame1=sliderSlant){	
+	const tl = init()	
+	tl.from(".proline1", {duration:.2, opacity:0}, "+=.2")
+	tl.to(".proline1", {duration:.2, opacity:0}, "+=.8")
+
+	
+	tl.add(frame1())
+
+	tl.to([ ".bg", ".t1"], {duration:.2, opacity:0}, `+=${read.frame1}`)
+
+	
+
+	tl.from(".frame2a", {duration:.2, opacity:0}, "+=.2")
+	tl.from(".frame2b", {duration:.2, opacity:0}, "+=.5")
+
+	tl.to(".frame2", {duration:.2, opacity:0}, `+=${read.frame2}`)
+
+	tl.add(fader(".frame3", read.frame3), "+=.3")
+	
+
+
+	tl.from([".frame4", ".footer"], {duration:.2, opacity:0}, "+=.3")
+	tl.from(".cta", {duration:.2, opacity:0}, "+=.5")
+
+
+	tl.add(olg())
+
 	return tl
 }
 
@@ -112,41 +104,17 @@ function b_1000x700(){
 
 function b_970x70(){
 
-const tl = new TimelineMax()
-tl.add("t1")
-tl.from(".t1a", {duration:.11, y:"-=50"}, "t1")
-	b_728x90(tl)
+	standard()
 }
 
 function b_320x50(){
-	
-	const tl = new TimelineMax()
-	tl.add("t1")
-	tl.from(".t1a", {duration:.2,  x:"-=180"}, "t1")
-	tl.from(".t1b", {duration:.2,  x:"+=180"}, "t1")
-	b_728x90(tl)
+	standard(sliderVertical)
 }
 
 function b_728x90(text1){
+	standard(sliderVertical)
 	
-	const tl = init()
-	if(text1){
-		tl.add(logoFader())
-		tl.add(text1, "+=.5")
-		tl.add(bgFadeOut(2))
-	}else{
-		tl.add(slider(), "+=.5")	
-	}
-	
-
-
-	tl.add(fader([".t2", ".logo2"], read.percentGoBack))
-	// tl.from(".logo2", {duration:.2, opacity:0}, "+=.1")
-	if(document.querySelector(".t2b")){
-		tl.add(fader(".t2b", read.betOnNFL))	
-	}
-	
-	tl.add(ender())
 }
 
-export { init, b_160x600, b_300x250, b_300x600, b_320x50, b_728x90, b_970x250, b_1000x700,b_970x70, origin, standard, read, slider, ender, logoFader, bgFadeOut }
+export { init, b_160x600, b_300x250, b_300x600, b_320x50, b_728x90, b_970x250, b_1000x700,b_970x70, origin, standard, read }
+

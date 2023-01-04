@@ -17,41 +17,18 @@ gsap.defaults({
 });
 
 var read = {
-	percentGoBack: 2.5,
-	betOnNFL: 2.2,
-	njasb: 2,
-	losingBy: 2.5
+	frame1: 2.6,
+	frame2: 3,
+	frame3: 3
 };
 
 var w = bannerSize.w;
 var h = bannerSize.h;
 
-function logoFader() {
-	var tl = new TimelineMax();
-	tl.to(".logo1", { duration: .2, opacity: 0 }, "+=.5");
-	return tl;
-}
-
-function bgFadeOut(read) {
-	var tl = new TimelineMax();
-	tl.to([".bg", ".t1"], { duration: .2, opacity: 0 }, "+=" + read);
-	return tl;
-}
-
 function fader(el, time) {
 	var tl = new TimelineMax();
 	tl.from(el, { duration: .3, opacity: 0 }, "+=.2");
 	tl.to(el, { duration: .3, opacity: 0 }, "+=" + time);
-	return tl;
-}
-
-function ender() {
-	var tl = new TimelineMax();
-	tl.from(".t3", { duration: .3, opacity: 0 }, "+=.1");
-	tl.from(".logo3", { duration: .3, opacity: 0 }, "+=.5");
-
-	tl.from([".footer", ".cta"], { duration: .3, opacity: 0 }, "+=.5");
-	tl.add((0, _proline.olg)());
 	return tl;
 }
 
@@ -62,38 +39,49 @@ function init() {
 			}
 		} });
 	tl.set(".frame1", { opacity: 1 });
-	if (window.universalBanner.name === "soccer") {
 
-		document.getElementById("legalContent").innerHTML = "Individuals must be 19 years of age or older, a resident of Ontario, and located in the province to participate in online PROLINE+ sports betting. Terms and Conditions Apply.";
-	}
 	return tl;
 }
 
-function slider() {
-	var read = arguments.length <= 0 || arguments[0] === undefined ? 1.7 : arguments[0];
-
+function sliderSlant() {
 	var tl = new TimelineMax();
-	tl.add(logoFader());
-
 	tl.add("t1");
-	tl.from(".t1a", { duration: .20, x: "-=100", y: "+=30", opacity: 0 }, "t1");
-	tl.from(".t1b", { duration: .20, x: "+=100", y: "-=30", opacity: 0 }, "t1+=.6");
+	tl.from(".t1a", { duration: .20, x: "-=100", y: "+=30", opacity: 0, ease: Power4.easeOut }, "t1");
+	tl.from(".t1b", { duration: .20, x: "+=100", y: "-=30", opacity: 0, ease: Power4.easeOut }, "t1+=.3");
+	return tl;
+}
 
-	tl.add(bgFadeOut(read));
+function sliderVertical() {
+	var tl = new TimelineMax();
+	tl.add("t1");
+	tl.from(".t1a", { duration: .20, y: "-=30", opacity: 0 }, "t1");
+	tl.from(".t1b", { duration: .20, y: "+=30", opacity: 0 }, "t1+=.2");
 	return tl;
 }
 
 function standard() {
-	var tl = init();
-	tl.add(slider(), "+=.5");
-	tl.from(".t2", { duration: .3, opacity: 0 }, "+=.1");
-	tl.from(".logo2", { duration: .3, opacity: 0 }, "+=.5");
-	tl.to(".text2", { duration: .2, opacity: 0 }, "+=" + read.njasb);
+	var frame1 = arguments.length <= 0 || arguments[0] === undefined ? sliderSlant : arguments[0];
 
-	if (document.querySelector(".t2b")) {
-		tl.add(fader(".t2b", read.betOnNFL));
-	}
-	tl.add(ender());
+	var tl = init();
+	tl.from(".proline1", { duration: .2, opacity: 0 }, "+=.2");
+	tl.to(".proline1", { duration: .2, opacity: 0 }, "+=.8");
+
+	tl.add(frame1());
+
+	tl.to([".bg", ".t1"], { duration: .2, opacity: 0 }, "+=" + read.frame1);
+
+	tl.from(".frame2a", { duration: .2, opacity: 0 }, "+=.2");
+	tl.from(".frame2b", { duration: .2, opacity: 0 }, "+=.5");
+
+	tl.to(".frame2", { duration: .2, opacity: 0 }, "+=" + read.frame2);
+
+	tl.add(fader(".frame3", read.frame3), "+=.3");
+
+	tl.from([".frame4", ".footer"], { duration: .2, opacity: 0 }, "+=.3");
+	tl.from(".cta", { duration: .2, opacity: 0 }, "+=.5");
+
+	tl.add((0, _proline.olg)());
+
 	return tl;
 }
 
@@ -119,39 +107,15 @@ function b_1000x700() {
 
 function b_970x70() {
 
-	var tl = new TimelineMax();
-	tl.add("t1");
-	tl.from(".t1a", { duration: .11, y: "-=50" }, "t1");
-	b_728x90(tl);
+	standard();
 }
 
 function b_320x50() {
-
-	var tl = new TimelineMax();
-	tl.add("t1");
-	tl.from(".t1a", { duration: .2, x: "-=180" }, "t1");
-	tl.from(".t1b", { duration: .2, x: "+=180" }, "t1");
-	b_728x90(tl);
+	standard(sliderVertical);
 }
 
 function b_728x90(text1) {
-
-	var tl = init();
-	if (text1) {
-		tl.add(logoFader());
-		tl.add(text1, "+=.5");
-		tl.add(bgFadeOut(2));
-	} else {
-		tl.add(slider(), "+=.5");
-	}
-
-	tl.add(fader([".t2", ".logo2"], read.percentGoBack));
-	// tl.from(".logo2", {duration:.2, opacity:0}, "+=.1")
-	if (document.querySelector(".t2b")) {
-		tl.add(fader(".t2b", read.betOnNFL));
-	}
-
-	tl.add(ender());
+	standard(sliderVertical);
 }
 
 exports.init = init;
@@ -166,10 +130,6 @@ exports.b_970x70 = b_970x70;
 exports.origin = _helpersHelpersJs.origin;
 exports.standard = standard;
 exports.read = read;
-exports.slider = slider;
-exports.ender = ender;
-exports.logoFader = logoFader;
-exports.bgFadeOut = bgFadeOut;
 
 },{"./helpers/helpers.js":2,"./proline":3}],2:[function(require,module,exports){
 "use strict";
@@ -207,16 +167,11 @@ function olg() {
 exports.olg = olg;
 
 },{}],4:[function(require,module,exports){
-"use strict";
+'use strict';
 
 var _commonJsCommonJs = require('../../_common/js/common.js');
 
-var tl = new TimelineMax();
-tl.add("t1");
-tl.from(".t1a", { duration: .17, y: "-=70" }, "t1");
-tl.from(".t1b", { duration: .17, y: "+=70" }, "t1+=.3");
-
-(0, _commonJsCommonJs.b_728x90)(tl);
+(0, _commonJsCommonJs.b_728x90)();
 
 },{"../../_common/js/common.js":1}]},{},[4])
 
